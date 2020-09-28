@@ -1,0 +1,85 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+  
+    "actionGroupResourceId": {
+      "type": "string",
+      "defaultValue": "/subscriptions/db99463c-2a00-433c-a39b-f63083b719a4/resourceGroups/shareservices/providers/microsoft.insights/actiongroups/alexmail"
+    },
+    "ServiceHealthRegions": {
+      "type": "array",
+      "defaultValue": ["UK South", "UK West"]
+    },
+    "ServiceAlertName": {
+      "type": "string",
+      "defaultValue": "Service Health Alert Test"
+    },
+    "ServiceHealthServices": {
+      "type": "array",
+      "defaultValue": ["Action Groups", "Activity Logs & Alerts", "Alerts & Metrics"]
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Insights/activityLogAlerts",
+      "apiVersion": "2017-04-01",
+      "name": "[parameters('ServiceAlertName')]",
+      "location": "Global",
+      "kind": null,
+      "tags": {
+ 
+      },
+      "properties": {
+        "mode": "Incremental",
+        "enabled": true,
+        "description": "",
+        "scopes": [
+          "[subscription().id]"
+        ],
+        "condition": {
+          "allOf": [
+            {
+              "field": "category",
+              "equals": "ServiceHealth",
+              "containsAny": null
+            },
+
+            {
+              "anyof":[{"field": "properties.incidentType",
+              "equals": "Incident",
+              "containsAny": null},
+
+              {"field": "properties.incidentType",
+                "equals": "Maintenance",
+                "containsAny": null}
+              ]
+            },
+ 
+            {
+              "field": "properties.impactedServices[*].ImpactedRegions[*].RegionName",
+              "equals": null,
+              "containsAny": "[parameters('ServiceHealthRegions')]"
+            },
+            {
+              "field": "properties.impactedServices[*].ServiceName",
+              "equals": null,
+              "containsAny": "[parameters('ServiceHealthServices')]"
+            }
+ 
+          ]
+        },
+        "actions": {
+          "actionGroups": [
+            {
+              "actionGroupId": "[parameters('actionGroupResourceId')]",
+              "webhookProperties": {
+ 
+              }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
