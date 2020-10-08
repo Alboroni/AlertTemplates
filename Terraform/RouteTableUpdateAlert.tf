@@ -31,7 +31,7 @@ resource "azurerm_monitor_activity_log_alert" "TFAAlert" {
   }
 
   action {
-    action_group_id = azurerm_monitor_action_group.main.id
+    action_group_id = azurerm_monitor_action_group.TFAAlert.id
 
     webhook_properties = {
       from = "terraform"
