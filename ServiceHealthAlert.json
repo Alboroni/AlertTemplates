@@ -17,7 +17,7 @@
     },
     "ServiceHealthServices": {
       "type": "array",
-      "defaultValue": ["Action Groups", "Activity Logs & Alerts", "Alerts & Metrics"]
+      "defaultValue": ["Action Groups", "Activity Logs & Alerts", "Alerts & Metrics","Alert","Application Gateway","Application Insights","Azure Active Directory","Azure Database for PostgreSQL","Azure DNS","Azure Firewall"]
     }
   },
   "resources": [
